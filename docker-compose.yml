@@ -1,0 +1,7 @@
+version: '2'
+
+services:
+    nonmem:
+        image: kinginsun/nonmem:7.4.3
+        volumes:
+            - ./license:/nonmem/nm743/license
