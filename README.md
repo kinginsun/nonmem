@@ -9,8 +9,8 @@
 
 
 ## 与Pirana整合
-* PsN的执行目录为nonmem的安装目录
-* 设置nmfe74的目录为nonmem的安装目录
+* PsN的执行目录指向此项目nonmem的根目录
+* nonmem的目录指向此项目nonmem的根目录
 
 
 ## 构建镜像
