@@ -1,6 +1,7 @@
 NONMEM7.4.3.zip
 PsN-4.8.1.tar.gz
 install/
+bak/
 models/
 execute
 util/nmfe74
