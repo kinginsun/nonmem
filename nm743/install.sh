@@ -9,15 +9,23 @@ sudo chmod +x util/nmfe74
 cd /usr/local/bin
 sudo rm execute
 sudo rm nmfe74
-sudo ln -s ${PWD}/execute
-sudo ln -s ${PWD}/util/nmfe74
+sudo ln -s ${NMRoot}/execute
+sudo ln -s ${NMRoot}/util/nmfe74
 cd ${NMRoot}
 
 # pull nonmem image
 #docker pull kinginsun/nonmem:7.4.3
 
 # test nonmem install
-NMRoot=${PWD}
-modelFolder=${PWD}
-d=`date +%s`
-docker run --rm --name nonmem${d} --workdir /nonmem/nm743/util -v ${NMRoot}/license:/nonmem/nm743/license -v ${modelFolder}/models:/nonmem/models kinginsun/nonmem:7.4.3 /bin/bash nmfe74 CONTROL5 OUTPUT5
+#NMRoot=${PWD}
+#modelFolder=${PWD}
+#d=`date +%s`
+#docker run --rm --name nonmem${d} --workdir /nonmem/nm743/util -v ${NMRoot}/license:/nonmem/nm743/license -v ${modelFolder}/models:/nonmem/models kinginsun/nonmem:7.4.3 /bin/bash nmfe74 CONTROL5 OUTPUT5
+
+cd models
+echo "Run test model with execute ......"
+execute CONTROL5
+
+echo "Run test model with nmfe74 ......"
+nmfe74 CONTROL5 OUTPUT5
+cd ..
