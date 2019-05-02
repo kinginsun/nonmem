@@ -17,3 +17,9 @@
 ## 构建镜像
 docker build -t kinginsun/nonmem:7.4.3 .
 
+## Github源码
+- 源码在 [kinginsun/nonmem](https://github.com/kinginsun/nonmem) 
+
+## 致谢
+- Perl Speaks NONMEM [PsN](https://uupharmacometrics.github.io/PsN/docs.html)
+- [ICON](https://www.iconplc.com/innovation/nonmem/),[Download](https://nonmem.iconplc.com/)
