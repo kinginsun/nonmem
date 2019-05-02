@@ -5,7 +5,7 @@
 
 
 ## Mac,Ubuntu安装
-+ 项目clone到本地：git clone git@github.com:kinginsun/nonmem.git
++ 项目clone到本地：git clone https://github.com/kinginsun/nonmem.git
 + 运行nonmem对应版本目录中的 ./install.sh
 
 
