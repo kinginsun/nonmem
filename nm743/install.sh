@@ -1,6 +1,7 @@
 #!/bin/bash
 p=${PWD}
 p=${p//\//\\\/}
+NMRoot=${PWD}
 sed 's/NMHOME/'${p}'/g' execute.dat > execute
 sed 's/NMHOME/'${p}'/g' nmfe74.dat > util/nmfe74
 sudo chmod +x execute
@@ -10,6 +11,7 @@ sudo rm execute
 sudo rm nmfe74
 sudo ln -s ${PWD}/execute
 sudo ln -s ${PWD}/util/nmfe74
+cd ${NMRoot}
 
 # pull nonmem image
 #docker pull kinginsun/nonmem:7.4.3

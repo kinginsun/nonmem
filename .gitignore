@@ -2,9 +2,9 @@ NONMEM7.4.3.zip
 PsN-4.8.1.tar.gz
 install/
 bak/
-models/
-!nm743/models/test01.mod
-!nm743/models/THEOPP
+models/*
+!CONTROL5
+!THEOPP
 execute
 nmfe74
 nonmem.lic
