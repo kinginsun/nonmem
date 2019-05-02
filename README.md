@@ -13,6 +13,9 @@
 * PsN的执行目录指向此项目nonmem中对应版本的目录，比如NONMEM 7.4.3就指向nm743
 * nonmem的目录指向此项目nonmem中对应版本的目录，比如NONMEM 7.4.3就指向nm743
 
+## 使用
+- execute CONTROL5.mod (命令行切换到mod所在目录，然后直接execute + mod文件，结果输出到当前目录)
+- nmfe74 CONTROL5.mod OUTPUT5.txt (nmfe74需指定模型和输出文件，结果也是输出到当前目录)
 
 ## 构建镜像
 docker build -t kinginsun/nonmem:7.4.3 .
