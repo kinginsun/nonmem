@@ -6,12 +6,12 @@
 
 ## Mac,Ubuntu安装
 + 项目clone到本地：git clone git@github.com:kinginsun/nonmem.git
-+ 运行nonmem目录中的 ./install.sh
++ 运行nonmem对应版本目录中的 ./install.sh
 
 
 ## 与Pirana整合
-* PsN的执行目录指向此项目nonmem的根目录
-* nonmem的目录指向此项目nonmem的根目录
+* PsN的执行目录指向此项目nonmem中对应版本的目录，比如NONMEM 7.4.3就指向nm743
+* nonmem的目录指向此项目nonmem中对应版本的目录，比如NONMEM 7.4.3就指向nm743
 
 
 ## 构建镜像
