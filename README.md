@@ -27,3 +27,8 @@ docker build -t kinginsun/nonmem:7.4.3 .
 - [PsN](https://uupharmacometrics.github.io/PsN/docs.html),[Download](https://uupharmacometrics.github.io/PsN/download.html)
 - [ICON](https://www.iconplc.com/innovation/nonmem/),[Download](https://nonmem.iconplc.com/)
 - [Pirana](http://lp.certara.com/WFDownloadPirana.html)
+
+## 与Pirana整合
+* settings
+  - PsN executables location: /Users/randyz/Documents/nonmem/nm743
+  - NONMEM: /Users/randyz/Documents/nonmem/nm743， 起个名字nm74,指向这个路径，然后搜索
