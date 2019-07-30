@@ -12,6 +12,7 @@
 ## 与Pirana整合
 * PsN的执行目录指向此项目nonmem中对应版本的目录，比如NONMEM 7.4.3就指向nm743
 * nonmem的目录指向此项目nonmem中对应版本的目录，比如NONMEM 7.4.3就指向nm743
+* Pirana下载：https://www.evernote.com/l/ABkzIX34qFxOB6aqA1Sxk3pFat5VLDC0f9E
 
 ## 使用
 - execute CONTROL5.mod (命令行切换到mod所在目录，然后直接execute + mod文件，结果输出到当前目录)
@@ -32,3 +33,13 @@ docker build -t kinginsun/nonmem:7.4.3 .
 * settings
   - PsN executables location: /Users/randyz/Documents/nonmem/nm743
   - NONMEM: /Users/randyz/Documents/nonmem/nm743， 起个名字nm74,指向这个路径，然后搜索
+
+## 问题1：pirana无法直接execute，不弹出terminal窗口
+
+ - 升级到macOS majove以后，pirana无法直接execute，在terminal检查nm72和PsN的命令都是没有问题的；发现是/usr/bin/xterm不存在造成的，由于不能在/usr/bin中增加软连接，只好在/usr/local/bin中增加xterm的软连接：
+    - $ which xterm
+    - $  sudo ln -s /opt/X11/bin/xterm /usr/local/bin/xterm
+    - 然后设置pirana —> settings —> Software integration —> Other Terminal
+
+- 增加软连接以后，还要把/usr/local/bin 加入pirana的环境变量中去Environment variable --> Add to PATH by Pirana
+- pirana安装license就可以使用所有功能
