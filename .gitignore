@@ -6,6 +6,7 @@ models/
 !CONTROL5.mod
 !THEOPP.dat
 execute
+bootstrap
 nmfe74
 nonmem.lic
 setup.pl

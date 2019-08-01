@@ -15,5 +15,8 @@ fi
 if [ -e 'nmfe74' ];then
   sudo rm nmfe74
 fi
+if [ -e 'bootstrap' ];then
+  sudo rm bootstrap
+fi
 cd ${NMRoot}
 echo "Uninstall success!"

@@ -3,13 +3,17 @@ p=${PWD}
 p=${p//\//\\\/}
 NMRoot=${PWD}
 sed 's/NMHOME/'${p}'/g' execute.dat > execute
+sed 's/NMHOME/'${p}'/g' bootstrap.dat > bootstrap
 sed 's/NMHOME/'${p}'/g' nmfe74.dat > util/nmfe74
 sudo chmod +x execute
+sudo chmod +x bootstrap
 sudo chmod +x util/nmfe74
 if [ -e '/usr/local/bin' ];then
   cd /usr/local/bin
   sudo rm execute
+  sudo rm bootstrap
   sudo rm nmfe74
+  sudo ln -s ${NMRoot}/bootstrap
   sudo ln -s ${NMRoot}/execute
   sudo ln -s ${NMRoot}/util/nmfe74
   cd ${NMRoot}
