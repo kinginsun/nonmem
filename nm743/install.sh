@@ -10,9 +10,22 @@ sudo chmod +x bootstrap
 sudo chmod +x util/nmfe74
 if [ -e '/usr/local/bin' ];then
   cd /usr/local/bin
+  if [ -e 'execute' ];then
   sudo rm execute
-  sudo rm bootstrap
-  sudo rm nmfe74
+  fi
+  cd /usr/local/bin
+  if [ -e 'execute' ];then
+    sudo rm execute
+  fi
+  if [ -e 'nmfe74' ];then
+    sudo rm nmfe74
+  fi
+  if [ -e 'bootstrap' ];then
+    sudo rm bootstrap
+  fi
+  if [ -e 'nmfe74' ];then
+  sudo rm util/nmfe74
+  fi
   sudo ln -s ${NMRoot}/bootstrap
   sudo ln -s ${NMRoot}/execute
   sudo ln -s ${NMRoot}/util/nmfe74
