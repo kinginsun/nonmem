@@ -3,4 +3,4 @@
 NMRoot=NMHOME
 modelFolder=${PWD}
 d=`date +%s`
-docker run --rm --name nonmem${d} --workdir /nonmem/nm743/util -v ${NMRoot}/license:/nonmem/nm743/license -v ${modelFolder}:/nonmem/models kinginsun/nonmem:7.4.3 /bin/bash nmfe74 $@ -rundir=/nonmem/models
+docker run --rm --name nonmem${d} --workdir /nonmem/nm743/util -v ${NMRoot}/license:/nonmem/nm743/license -v ${modelFolder}:/nonmem/models kinginsun/nonmem:7.4.3 run nmfe74 $@ -rundir=/nonmem/models

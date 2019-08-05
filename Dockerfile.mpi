@@ -1,0 +1,21 @@
+FROM ubuntu:16.04
+ADD install /nonmem/
+WORKDIR /nonmem
+RUN mkdir /nommem && apt-get update && apt-get install -y gfortran python \
+    unzip cpanminus apt-utils build-essential autoconf automake && cpanm Math::Random Moose \
+    MooseX::Params::Validate Statistics::Distributions \
+    Archive::Zip File::Copy::Recursive YAML::XS Storable && /bin/bash ./nm743CD/SETUP74 ${PWD}/nm743CD \
+    /nonmem/nm743 gfortran y /usr/bin/ar same rec q \
+    && cd PsN-Source && perl setup.pl 
+RUN cd /nonmem/nm743CD/mpich2 \
+    && tar xzf mpich2_1.2.1.1.orig.tar.gz && cd mpich2-1.2.1p1 && mkdir -p /nonmem/mpich2 \
+    && ./configure --prefix=/nonmem/mpich2 2>&1 | tee c.txt && make 2>&1 | tee m.txt \
+    && make install 2>&1 | tee mi.txt && cp /nonmem/mpich2/lib/libmpich.a /nonmem/nm743/mpi/mpi_ling/ \
+    && echo MPD_SECRETWORD=mr45-j9z>/etc/mpd.conf \
+    && chmod 600 /etc/mpd.conf
+RUN cd /usr/local/bin/ && echo '#!/bin/bash'>>run && echo 'CMD="$1"'>>run && echo 'shift'>>run \
+    && echo 'mpd &'>>run && echo '${CMD} $@'>>run && chmod +x run
+RUN cd /nonmem && rm -r /root/.cpanm && rm -r PsN-Source \
+    && rm -r nm743CD && rm -r nm743/help nm743/html nm743/guides nm743/examples nm743/run \
+    && rm nm743/*.zip nm743/*.pdf nm743/instal* nm743/unzip*
+ENV PATH="/nonmem/mpich2/bin:/nonmem/nm743/util:${PATH}"
