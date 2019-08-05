@@ -56,7 +56,7 @@ docker build -f Dockerfile.mpi -t kinginsun/nonmemmpi:7.4.3 .
  - auto-FPI 会将计算分布到多台主机上，配置还有待研究
 
 ## execute, nmfe74 增加参数 “-parafile=mpi_for_win.pnm” 即可启动MPI，示例的windows pnm文件如下：
-
+```
 $DEFAULTS
 ; User may specify their own variables with bracketed words at the nmfe72 script command line:
 ; nmfe72 myprog.ctl myres.res "-parafile=mpiwini8.pnm" "[nodes]=3"
@@ -111,6 +111,7 @@ $IDRANGES ; USED IF PARSE_TYPE=3
 2:1,60
 
 ## pirana自带的pnm文件：pirana_auto_mpi.pnm
+```
 $DEFAULTS
 [nodes]=4
 
@@ -124,6 +125,6 @@ $COMMANDS
 $DIRECTORIES
 1:NONE ; Common directory
 2-[nodes]:worker{#-1} ; Worker directories
-
+```
 
 ## Pirana通过nmfe74命令运行时需勾选：Copy back results to main folderr，否则pirana里面看不到结果
