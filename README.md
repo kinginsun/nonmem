@@ -54,6 +54,7 @@ docker build -f Dockerfile.mpi -t kinginsun/nonmemmpi:7.4.3 .
  - 最后将/nonmem/mpich2 和 /nonmem/nm743/util 加入PATH
  - 上面设置只是实现了auto-MPI，
  - auto-FPI 会将计算分布到多台主机上，配置还有待研究
+ - Pirana通过nmfe74命令运行时需勾选：Copy back results to main folderr，否则pirana里面看不到结果
 
 ## execute, nmfe74 增加参数 “-parafile=mpi_for_win.pnm” 即可启动MPI，示例的windows pnm文件如下：
 ```
@@ -127,5 +128,3 @@ $DIRECTORIES
 1:NONE ; Common directory
 2-[nodes]:worker{#-1} ; Worker directories
 ```
-
-## Pirana通过nmfe74命令运行时需勾选：Copy back results to main folderr，否则pirana里面看不到结果
