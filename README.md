@@ -109,6 +109,7 @@ $DIRECTORIES
 $IDRANGES ; USED IF PARSE_TYPE=3
 1:61,100
 2:1,60
+```
 
 ## pirana自带的pnm文件：pirana_auto_mpi.pnm
 ```
