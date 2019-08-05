@@ -2,9 +2,10 @@ NONMEM7.4.3.zip
 PsN-4.8.1.tar.gz
 install/
 bak/
-models/
 !CONTROL5.mod
 !THEOPP.dat
+!pirana_auto_mpi.pnm
+models/
 execute
 bootstrap
 nmfe74
