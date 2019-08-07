@@ -1,6 +1,3 @@
-## Pharmacometrics-Docker
- - [Pharmacometrics-Docker](https://github.com/billdenney/Pharmacometrics-Docker)
-
 ## 说明
 * 此image基于ubuntu 16.04构建，整合了nonmem7.4.3和PsN4.8.1
 * 目前只做了nmfe74和execute的映射，可以在host主机直接调用；其他PsN命令可以类似的写个shell脚本
@@ -133,3 +130,6 @@ $DIRECTORIES
 1:NONE ; Common directory
 2-[nodes]:worker{#-1} ; Worker directories
 ```
+
+## Pharmacometrics-Docker
+ - [Pharmacometrics-Docker](https://github.com/billdenney/Pharmacometrics-Docker)
