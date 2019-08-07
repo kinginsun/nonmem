@@ -5,6 +5,9 @@ NMRoot=${PWD}
 if [ -e 'execute' ];then
   sudo rm execute
 fi
+if [ -e 'bootstrap' ];then
+  sudo rm bootstrap
+fi
 if [ -e 'util/nmfe74' ];then
 sudo rm util/nmfe74
 fi

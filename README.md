@@ -1,3 +1,6 @@
+## Pharmacometrics-Docker
+ - [Pharmacometrics-Docker](https://github.com/billdenney/Pharmacometrics-Docker)
+
 ## 说明
 * 此image基于ubuntu 16.04构建，整合了nonmem7.4.3和PsN4.8.1
 * 目前只做了nmfe74和execute的映射，可以在host主机直接调用；其他PsN命令可以类似的写个shell脚本
@@ -21,7 +24,9 @@
 ## 构建镜像
 docker build -t kinginsun/nonmem:7.4.3 .
 
-docker build -f Dockerfile.mpi -t kinginsun/nonmemmpi:7.4.3 .
+docker build -f Dockerfile.mpi2 -t kinginsun/nonmemmpi2:7.4.3 .
+
+docker build -f NONMEM_7.4.3.Dockerfile -t kinginsun/dnonmem:7.4.3 .
 
 ## Github源码
 - 源码在 [kinginsun/nonmem](https://github.com/kinginsun/nonmem) 
