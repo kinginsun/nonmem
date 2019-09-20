@@ -7,6 +7,7 @@ bak/
 !pirana_auto_mpi.pnm
 models/
 execute
+vpc
 bootstrap
 nmfe74
 nonmem.lic

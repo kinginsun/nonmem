@@ -3,10 +3,12 @@ p=${PWD}
 p=${p//\//\\\/}
 NMRoot=${PWD}
 sed 's/NMHOME/'${p}'/g' execute.dat > execute
+sed 's/NMHOME/'${p}'/g' vpc.dat > vpc
 sed 's/NMHOME/'${p}'/g' bootstrap.dat > bootstrap
 sed 's/NMHOME/'${p}'/g' nmfe74.dat > util/nmfe74
 sed 's/NMHOME/'${p}'/g' nmshell.dat > nmshell
 sudo chmod +x execute
+sudo chmod +x vpc
 sudo chmod +x bootstrap
 sudo chmod +x nmshell
 sudo chmod +x util/nmfe74
