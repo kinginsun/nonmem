@@ -3,6 +3,12 @@
 * 目前只做了nmfe74/nmfe75和execute的映射，可以在host主机直接调用；其他PsN命令可以类似的写个shell脚本
 * 用户自己的license替换license目录中的nonmem.lic
 
+## 所需要的软件与环境：[安装方法](https://github.com/kinginsun/nonmem/blob/master/how%20to%20install%20nonmem.pptx)
++ docker（必须）
++ git（必须）
++ Pirana mac版（可选）
++ XQuatz (不安装pirana可以不需要)
+
 
 ## Mac,Ubuntu安装
 + 项目clone到本地：git clone https://github.com/kinginsun/nonmem.git
