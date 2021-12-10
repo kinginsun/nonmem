@@ -1,4 +1,4 @@
-## 说明
+## 说明（本镜像仅用于个人研究使用）
 * 此image基于ubuntu 16.04构建，整合了nonmem7.4.3和PsN4.8.1; 基于ubuntu 18.04 整合了nonmem7.5.0和PsN5.2.6
 * 目前只做了nmfe74/nmfe75和execute的映射，可以在host主机直接调用；其他PsN命令可以类似的写个shell脚本
 * 用户自己的license替换license目录中的nonmem.lic
