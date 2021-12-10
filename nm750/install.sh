@@ -5,13 +5,15 @@ NMRoot=${PWD}
 sed 's/NMHOME/'${p}'/g' execute.dat > execute
 sed 's/NMHOME/'${p}'/g' vpc.dat > vpc
 sed 's/NMHOME/'${p}'/g' bootstrap.dat > bootstrap
-sed 's/NMHOME/'${p}'/g' nmfe74.dat > util/nmfe74
+sed 's/NMHOME/'${p}'/g' nmfe75.dat > util/nmfe75
+sed 's/NMHOME/'${p}'/g' ddexpand.dat > util/ddexpand
 sed 's/NMHOME/'${p}'/g' nmshell.dat > nmshell
 sudo chmod +x execute
 sudo chmod +x vpc
 sudo chmod +x bootstrap
 sudo chmod +x nmshell
-sudo chmod +x util/nmfe74
+sudo chmod +x util/nmfe75
+sudo chmod +x util/ddexpand
 
 echo "Checking environments..."
 dk=`docker --help`
@@ -47,8 +49,8 @@ echo ""
 echo ""
 echo ""
 echo "================================TEST TWO==============================="
-echo "Run test model with nmfe74 ......"
-../util/nmfe74 CONTROL5.mod OUTPUT5
+echo "Run test model with nmfe75 ......"
+../util/nmfe75 CONTROL5.mod OUTPUT5
 echo ""
 echo ""
 echo ""
@@ -68,13 +70,13 @@ echo ""
 echo ""
 echo ""
 echo "================================TEST FOUR==============================="
-echo "Run nmfe74 with mpi ......"
+echo "Run nmfe75 with mpi ......"
 echo ""
 echo ""
 echo ""
 echo ""
 echo ""
-../util/nmfe74 CONTROL5.mod OUTPUT5 "-parafile=pirana_auto_mpi.pnm" "[nodes]=4"
+../util/nmfe75 CONTROL5.mod OUTPUT5 "-parafile=pirana_auto_mpi.pnm" "[nodes]=4"
 echo ""
 echo ""
 echo ""

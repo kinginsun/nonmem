@@ -1,0 +1,14 @@
+$DEFAULTS
+[nodes]=4
+
+$GENERAL
+NODES=[nodes] PARSE_TYPE=2 TIMEOUTI=20 TIMEOUT=500 PARAPRINT=1 TRANSFER_TYPE=1
+
+$COMMANDS
+1:mpirun -wdir "$PWD" -n 1 ./nonmem  $*
+2-[nodes]:-wdir "$PWD/worker{#-1}" -n 1 ./nonmem
+
+$DIRECTORIES
+1:NONE ; Common directory
+2-[nodes]:worker{#-1} ; Worker directories
+

@@ -5,8 +5,8 @@ RUN mkdir /nommem && apt-get update && apt-get install -y gfortran python libmpi
     unzip cpanminus apt-utils build-essential autoconf automake && cpanm Math::Random Moose \
     MooseX::Params::Validate Statistics::Distributions \
     Archive::Zip File::Copy::Recursive YAML::XS Storable && /bin/bash ./nm743CD/SETUP74 ${PWD}/nm743CD \
-    /nonmem/nm743 gfortran y /usr/bin/ar same rec q \
-    && cd PsN-Source && perl setup.pl && cp /usr/lib/mpich/lib/libmpich.a /nonmem/nm743/mpi/mpi_ling/libmpich.a \
+    /nonmem/nm743 gfortran y /usr/bin/ar same rec q
+RUN cd PsN-Source01 && perl setup.pl && cp /usr/lib/mpich/lib/libmpich.a /nonmem/nm743/mpi/mpi_ling/libmpich.a \
     && cd /nonmem && rm -r /root/.cpanm && rm -r PsN-Source \
     && rm -r nm743CD && rm -r nm743/help nm743/html nm743/guides nm743/examples nm743/run \
     && rm nm743/*.zip nm743/*.pdf nm743/instal* nm743/unzip*

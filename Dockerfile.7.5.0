@@ -1,0 +1,13 @@
+FROM ubuntu:18.04
+ADD install /nonmem/
+WORKDIR /nonmem
+RUN mkdir /nommem && apt-get update && apt-get install -y gfortran python libmpich-dev mpich \
+    unzip cpanminus apt-utils build-essential autoconf automake python3 python3-venv python3-dev make && cpanm Math::Random Moose \
+    MooseX::Params::Validate Statistics::Distributions \
+    Archive::Zip File::Copy::Recursive YAML::XS Storable && /bin/bash ./nm750CD/SETUP75 ${PWD}/nm750CD \
+    /nonmem/nm750 gfortran y /usr/bin/ar same rec q
+RUN cd PsN-Source && perl setup.pl -auto && cp psn.conf /usr/local/share/perl/5.26.1/PsN_5_2_6/psn.conf && cp /usr/lib/mpich/lib/libmpich.a /nonmem/nm750/mpi/mpi_ling/libmpich.a \
+    && cd /nonmem && rm -r /root/.cpanm && rm -r PsN-Source \
+    && rm -r nm750CD && rm -r nm750/help nm750/html nm750/guides nm750/examples nm750/run \
+    && rm nm750/*.zip nm750/*.pdf nm750/instal* nm750/unzip*
+ENV PATH="/nonmem/nm750/util:${PATH}"
