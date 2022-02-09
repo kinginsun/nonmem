@@ -1,9 +1,0 @@
-#!/bin/bash
-#echo "$@"
-NMRoot=/Users/randyz/Documents/nonmem/nm743
-modelFolder=${PWD}
-docker stop nonmemshell
-docker rm nonmemshell
-docker run -it --name nonmemshell --workdir /nonmem/models -v ${NMRoot}/license:/nonmem/nm743/license -v ${modelFolder}:/nonmem/models kinginsun/nonmemmpi2:7.4.3 bash
-docker stop nonmemshell
-docker rm nonmemshell

@@ -2,8 +2,11 @@
 #echo "$@"
 NMRoot=NMHOME
 modelFolder=${PWD}
-docker stop nonmemshell
-docker rm nonmemshell
+count=`docker ps -a | grep "[n]onmemshell" | wc -l`
+if [ "$count" -gt "0" ];then
+    docker stop nonmemshell
+    docker rm nonmemshell
+fi
 docker run -it --name nonmemshell --workdir /nonmem/models -v ${NMRoot}/license:/nonmem/nm743/license -v ${modelFolder}:/nonmem/models kinginsun/nonmemmpi2:7.4.3 bash
 docker stop nonmemshell
 docker rm nonmemshell

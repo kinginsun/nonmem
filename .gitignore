@@ -8,6 +8,7 @@ bak/
 !**/models/pirana_auto_mpi.pnm
 execute
 vpc
+scm
 bootstrap
 nmfe74
 nmfe75
