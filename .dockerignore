@@ -1,0 +1,9 @@
+# Repo junk only — do not exclude install/ (needed by Dockerfile / 7.5.0 / mpi2).
+.git
+bak
+nm743
+nm750
+nm760
+how to install nonmem.pptx
+OnlyMe.md
+*.pptx
