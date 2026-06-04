@@ -1,4 +1,4 @@
-# Repo junk only — do not exclude install/ (needed by Dockerfile / 7.5.0 / mpi2).
+# Repo junk only — do not exclude install/ (needed by Dockerfile / 7.4.3 / 7.5.0 / 7.6.0).
 .git
 bak
 nm743
