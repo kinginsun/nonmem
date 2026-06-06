@@ -1,1 +1,0 @@
-/usr/local/bin/execute models/CONTROL5.mod
