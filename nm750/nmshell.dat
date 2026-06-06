@@ -7,6 +7,6 @@ if [ "$count" -gt "0" ];then
     docker stop nonmemshell
     docker rm nonmemshell
 fi
-docker run -it --name nonmemshell --workdir /nonmem/models -v ${NMRoot}/license:/nonmem/nm750/license -v ${modelFolder}:/nonmem/models kinginsun/nonmemmpi2:7.5.0 bash
+docker run --platform linux/amd64 -it --name nonmemshell --workdir /nonmem/models -v ${NMRoot}/license:/nonmem/nm750/license -v ${modelFolder}:/nonmem/models kinginsun/nonmem:7.5.0 bash
 docker stop nonmemshell
 docker rm nonmemshell

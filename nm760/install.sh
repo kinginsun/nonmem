@@ -34,10 +34,10 @@ else
     exit 11
 fi
 
-if ! docker image inspect kinginsun/nonmemmpi2:7.6.0 >/dev/null 2>&1; then
-    echo "Docker image kinginsun/nonmemmpi2:7.6.0 not found."
-    echo "Build it from the repo root (requires install/nm760CD from NONMEM 7.6.0 CD):"
-    echo "  docker build -f Dockerfile.7.6.0 -t kinginsun/nonmemmpi2:7.6.0 ."
+if ! docker image inspect kinginsun/nonmem:7.6.0 >/dev/null 2>&1; then
+    echo "Docker image kinginsun/nonmem:7.6.0 not found."
+    echo "Pull the pre-built image:"
+    echo "  docker pull kinginsun/nonmem:7.6.0"
     exit 12
 fi
 

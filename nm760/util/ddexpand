@@ -1,0 +1,6 @@
+#!/bin/bash
+#echo "$@"
+NMRoot=/Users/randyz/Documents/nonmem/nm760
+modelFolder=${PWD}
+d=`date +%s`
+docker run --rm --name nonmem${d} --workdir /nonmem/nm760/util -v ${NMRoot}/license:/nonmem/nm760/license -v ${modelFolder}:/nonmem/models kinginsun/nonmem:7.6.0 ddexpand $@ -rundir=/nonmem/models

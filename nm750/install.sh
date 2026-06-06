@@ -35,7 +35,39 @@ else
 fi
 
 
+if [ ! -f license/nonmem.lic ]; then
+    echo "Place your license at: ${NMRoot}/license/nonmem.lic"
+    exit 13
+fi
+
+if ! docker image inspect kinginsun/nonmem:7.5.0 >/dev/null 2>&1; then
+    echo "Docker image kinginsun/nonmem:7.5.0 not found."
+    echo "Pull the pre-built image:"
+    echo "  docker pull kinginsun/nonmem:7.5.0"
+    exit 12
+fi
+
+check_run_ok() {
+    local label="$1"
+    local lst="$2"
+    if [[ -f "$lst" ]] && grep -aqE "OBJECTIVE VALUE|MINIMUM VALUE OF THE OBJECTIVE FUNCTION|#CPUT:|Stop Time:" "$lst" 2>/dev/null; then
+        echo "PASS: $label (see $lst)"
+        return 0
+    fi
+    local log
+    log="$(find modelfit_dir* -name nmfe_output.txt 2>/dev/null | head -1)"
+    if [[ -n "$log" ]] && grep -q "Done with nonmem execution" "$log" 2>/dev/null; then
+        echo "PASS: $label (see $log)"
+        return 0
+    fi
+    echo "FAIL: $label — no successful NONMEM output found."
+    echo "      Hint: PsN prints F:1 for Finished (not Failed). Check modelfit_dir*/NM_run1/."
+    return 1
+}
+
 cd models
+rm -rf temp_dir modelfit_dir*
+echo "PsN execute status: S:=Started, F:=Finished (not Failed)"
 echo "===============================TEST ONE==============================="
 echo "Run test model with execute ......"
 echo ""
@@ -44,6 +76,7 @@ echo ""
 echo ""
 echo ""
 ../execute CONTROL5.mod
+check_run_ok "execute CONTROL5.mod" "CONTROL5.lst"
 
 echo ""
 echo ""
@@ -53,7 +86,7 @@ echo ""
 echo "================================TEST TWO==============================="
 echo "Run test model with nmfe75 ......"
 ../util/nmfe75 CONTROL5.mod OUTPUT5
-echo ""
+check_run_ok "nmfe75 CONTROL5.mod" "OUTPUT5"
 echo ""
 echo ""
 echo ""
@@ -66,6 +99,7 @@ echo ""
 echo ""
 echo ""
 ../execute -parafile=pirana_auto_mpi.pnm CONTROL5.mod -nodes='4'
+check_run_ok "execute MPI" "CONTROL5.lst"
 echo ""
 echo ""
 echo ""
@@ -78,7 +112,8 @@ echo ""
 echo ""
 echo ""
 echo ""
-../util/nmfe75 CONTROL5.mod OUTPUT5 "-parafile=pirana_auto_mpi.pnm" "[nodes]=4"
+../util/nmfe75 CONTROL5.mod OUTPUT5_mpi "-parafile=pirana_auto_mpi.pnm" "[nodes]=4"
+check_run_ok "nmfe75 MPI" "OUTPUT5_mpi"
 echo ""
 echo ""
 echo ""

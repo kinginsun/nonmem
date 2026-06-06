@@ -1,13 +1,53 @@
-FROM ubuntu:18.04
-ADD install /nonmem/
+# syntax=docker/dockerfile:1
+# Multi-stage build: copy only nm750CD + PsN-Source (not the whole install/ tree).
+
+FROM --platform=linux/amd64 ubuntu:18.04 AS builder
+COPY install/nm750CD /nonmem/nm750CD
+COPY install/PsN-Source /nonmem/PsN-Source
+COPY install/psn.conf.nm750 /nonmem/psn.conf.nm750
 WORKDIR /nonmem
-RUN mkdir /nommem && apt-get update && apt-get install -y gfortran python libmpich-dev mpich \
-    unzip cpanminus apt-utils build-essential autoconf automake python3 python3-venv python3-dev make && cpanm Math::Random Moose \
-    MooseX::Params::Validate Statistics::Distributions \
-    Archive::Zip File::Copy::Recursive YAML::XS Storable && /bin/bash ./nm750CD/SETUP75 ${PWD}/nm750CD \
-    /nonmem/nm750 gfortran y /usr/bin/ar same rec q
-RUN cd PsN-Source && perl setup.pl -auto && cp psn.conf /usr/local/share/perl/5.26.1/PsN_5_2_6/psn.conf && cp /usr/lib/mpich/lib/libmpich.a /nonmem/nm750/mpi/mpi_ling/libmpich.a \
-    && cd /nonmem && rm -r /root/.cpanm && rm -r PsN-Source \
-    && rm -r nm750CD && rm -r nm750/help nm750/html nm750/guides nm750/examples nm750/run \
-    && rm nm750/*.zip nm750/*.pdf nm750/instal* nm750/unzip*
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        gfortran perl python libmpich-dev mpich unzip cpanminus \
+        build-essential autoconf automake make \
+    && cpanm --notest Math::Random Moose MooseX::Params::Validate Statistics::Distributions \
+        Math::SigFigs Capture::Tiny Math::Random::Free Math::MatrixReal Mouse \
+        MouseX::Params::Validate YAML Archive::Zip File::Copy::Recursive File::HomeDir \
+        YAML::XS Storable \
+    && /bin/bash ./nm750CD/SETUP75 ${PWD}/nm750CD /nonmem/nm750 gfortran y /usr/bin/ar same rec q \
+    && cd PsN-Source \
+    && perl -i -0pe 's/(Would you like to install the PsNR R package\? \[y\/n\] ";\n\n    )if \(\$auto or confirm\(\)\)/$1if (0)/s' setup.pl \
+    && perl -i -0pe 's/(Would you like to install the pharmpy python package\? \[y\/n\] ";\n\n    )if \(\$auto or confirm\(\)\)/$1if (0)/s' setup.pl \
+    && perl -i -0pe 's/(Would you like to install the PsN test library\? \[y\/n\] ";\n    )if \(\$auto or confirm\(\)\)/$1if (0)/s' setup.pl \
+    && perl setup.pl -auto \
+    && PSN_DIR="$(find /usr/local/share/perl -maxdepth 2 -type d -name 'PsN_5_7_1' | head -1)" \
+    && test -n "$PSN_DIR" \
+    && cp /nonmem/psn.conf.nm750 "${PSN_DIR}/psn.conf" \
+    && cp "$(find /usr/lib -name 'libmpich.a' | head -1)" /nonmem/nm750/mpi/mpi_ling/libmpich.a \
+    && rm -rf nm750CD PsN-Source psn.conf.nm750 \
+        nm750/help nm750/html nm750/guides nm750/examples nm750/run \
+        /usr/local/share/perl/*/PsN_test_5_7_1 \
+        "${PSN_DIR}/Rlib" \
+        /root/.cpanm \
+    && rm -f nm750/*.zip nm750/*.pdf nm750/instal* nm750/unzip* \
+    && apt-get purge -y --auto-remove \
+        build-essential autoconf automake cpanminus unzip libmpich-dev make \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/* /tmp/* \
+        /usr/share/doc/* /usr/share/man/* /usr/share/locale/*
+
+FROM --platform=linux/amd64 ubuntu:18.04
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        gfortran mpich libmpich-dev perl python \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/* \
+        /usr/share/doc/* /usr/share/man/*
+
+COPY --from=builder /nonmem/nm750 /nonmem/nm750
+COPY --from=builder /usr/local/share/perl /usr/local/share/perl
+COPY --from=builder /usr/local/lib /usr/local/lib
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+WORKDIR /nonmem
 ENV PATH="/nonmem/nm750/util:${PATH}"

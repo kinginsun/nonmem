@@ -1,0 +1,69 @@
+PsN version: 5.7.1
+Run started: 2026-06-06 at 12:30:54
+Run finished: 2026-06-06 at 12:31:00
+version_and_option_info.txt is overwitten if the run is restarted later using option -directory.
+The original file from the first call is saved as original_version_and_option_info.txt.
+
+Command:
+/usr/local/bin/execute models/CONTROL5.mod
+
+NONMEM:
+/nonmem/nm750
+
+Actual values optional execute options (undefined values not listed):
+-copy_data=1
+-prepend_options_to_lst=0
+-tail_output=0
+
+Actual values optional PsN (common) options (undefined values not listed):
+-abort_on_fail=0
+-accepted_ofv_difference=0.5
+-add_retries=0
+-always_datafile_in_nmrun=0
+-check_nmtran=0
+-clean=1
+-compress=0
+-crash_restarts=5
+-debug_rmd=0
+-degree=0.1
+-directory=/nonmem/models/modelfit_dir1/
+-display_iterations=0
+-handle_crashes=1
+-handle_msfo=0
+-html=0
+-large_omega_cv_limit=0.8
+-large_sigma_cv_limit=0.8
+-large_theta_cv_limit=0.5
+-last_est_complete=0
+-lsf_sleep=3
+-min_retries=0
+-missing_data_token=-99
+-model_subdir=0
+-nice=19
+-nm_version=default
+-nmfe=1
+-nodes=0
+-pdf=1
+-picky=0
+-prepend_model_file_name=0
+-quick_summarize=0
+-retries=0
+-rmarkdown=1
+-rplots=0
+-run_on_lsf=0
+-run_on_sge=0
+-run_on_slurm=0
+-run_on_torque=0
+-run_on_ud=0
+-run_on_zink=0
+-seed=664327
+-send_email=0
+-shrinkage=0
+-significant_digits_accept=0
+-so=0
+-template_directory_rplots=/usr/local/share/perl/5.26.1/PsN_5_7_1/R-scripts
+-template_file_rplots=execute_default.Rmd
+-threads=5
+-tweak_inits=1
+-verbose=0
+-zip=0

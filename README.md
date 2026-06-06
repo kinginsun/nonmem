@@ -14,7 +14,8 @@ Docker images and thin host scripts for running [NONMEM](https://www.iconplc.com
 - [Prerequisites](#prerequisites)
 - [Quick start](#quick-start)
 - [Windows installation](#windows-installation)
-- [Building images](#building-images)
+- [Building images (developers)](#building-images-developers)
+- [Publishing to Docker Hub](#publishing-to-docker-hub)
 - [Host wrappers](#host-wrappers)
 - [Running models](#running-models)
 - [Pirana integration](#pirana-integration)
@@ -32,7 +33,7 @@ Docker images and thin host scripts for running [NONMEM](https://www.iconplc.com
 | **Host directory** | `nm743/`, `nm750/`, or `nm760/` — templates become runnable scripts after install |
 | **Install (Unix)** | `./install.sh` → shell scripts (`execute`, `util/nmfeXX`, …) |
 | **Install (Windows)** | `install.ps1` → PowerShell + `.cmd` launchers (`execute.cmd`, …) |
-| **Docker image** | Pre-built NONMEM + PsN + MPI (per version) |
+| **Docker image** | Pre-built `kinginsun/nonmem:<version>` — pull with Docker; no local build needed |
 | **Model directory** | Your working directory; mounted as `/nonmem/models` in the container |
 | **License** | `license/nonmem.lic` in the host directory, mounted into the container |
 
@@ -57,15 +58,15 @@ Host:  results written in my_project/
 
 | NONMEM | Host dir | Image (recommended) | Dockerfile | Base OS | PsN | `nmfe` |
 |--------|----------|---------------------|------------|---------|-----|--------|
-| 7.4.3 | `nm743/` | `kinginsun/nonmemmpi2:7.4.3` | `Dockerfile.7.4.3` | Ubuntu 16.04 | 4.8.1 | `nmfe74` |
-| 7.5.0 | `nm750/` | `kinginsun/nonmemmpi2:7.5.0` | `Dockerfile.7.5.0` | Ubuntu 18.04 | 5.2.6 | `nmfe75` |
-| 7.6.0 | `nm760/` | `kinginsun/nonmemmpi2:7.6.0` | `Dockerfile.7.6.0` | Ubuntu 22.04 | 5.2.6 | `nmfe76` |
+| 7.4.3 | `nm743/` | `kinginsun/nonmem:7.4.3` | `Dockerfile.7.4.3` | Ubuntu 16.04 | 5.7.1 | `nmfe74` |
+| 7.5.0 | `nm750/` | `kinginsun/nonmem:7.5.0` | `Dockerfile.7.5.0` | Ubuntu 18.04 | 5.7.1 | `nmfe75` |
+| 7.6.0 | `nm760/` | `kinginsun/nonmem:7.6.0` | `Dockerfile.7.6.0` | Ubuntu 22.04 | 5.7.1 | `nmfe76` |
 
-**7.4.3 alternative:** `Dockerfile` builds `kinginsun/nonmem:7.4.3` (NONMEM only, no MPI / PsN).
+**7.4.3 alternative (developers):** `Dockerfile` builds a NONMEM-only image without MPI / PsN (not used by host wrappers).
 
 Use `Dockerfile.7.4.3` for Pirana, PsN, and parallel runs.
 
-**7.6.0 image size:** `Dockerfile.7.6.0` uses a multi-stage build and copies only `nm760CD` + PsN (~**1.1–1.3 GB**). Older layouts that `ADD install/` the full folder were ~3.4 GB.
+**Image size:** All Dockerfiles use a multi-stage build and copy only the required CD + `PsN-Source` (not the whole `install/` folder). `7.6.0` is ~**1.1–1.3 GB**; older single-stage layouts that `ADD install/` were ~2.5–3.4 GB.
 
 ---
 
@@ -75,7 +76,8 @@ Use `Dockerfile.7.4.3` for Pirana, PsN, and parallel runs.
 |-------------|---------------|---------|
 | [Docker](https://docs.docker.com/get-docker/) | Docker Desktop or Engine | [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/) |
 | [Git](https://git-scm.com/) | Yes | Yes (Git for Windows) |
-| ICON NONMEM installation media | Yes (local `install/`, not in git) | Same |
+| ICON `nonmem.lic` | Yes (your license file) | Same |
+| ICON NONMEM installation media | Only if [building images locally](#building-images-developers) | Same |
 | [Pirana](https://www.certara.com/software/pirana-modeling-workbench/) | Optional (macOS) | Not available (macOS only) |
 | XQuartz + `xterm` | Optional (Pirana terminal) | Not required |
 | PowerShell | — | 5.1+ (included in Windows 10/11) |
@@ -86,14 +88,20 @@ Step-by-step slides (legacy): [how to install nonmem.pptx](https://github.com/ki
 
 ## Quick start
 
+**End users:** pull a pre-built image — no local build or NONMEM CD required.
+
 ```bash
 git clone https://github.com/kinginsun/nonmem.git
 cd nonmem
 ```
 
-1. **Prepare `install/`** (gitignored) with ICON media — see [Building images](#building-images).
-2. **Build** the Docker image for your NONMEM version.
-3. **Install host wrappers** and place your license:
+1. **Pull** the Docker image for your NONMEM version:
+
+   ```bash
+   docker pull kinginsun/nonmem:7.6.0   # or kinginsun/nonmem:7.5.0 / kinginsun/nonmem:7.4.3
+   ```
+
+2. **Install host wrappers** and place your license:
 
    **macOS / Linux**
 
@@ -105,7 +113,14 @@ cd nonmem
 
    **Windows** — see [Windows installation](#windows-installation).
 
-4. **Run** from the directory that contains your `.mod` file.
+3. **Run** from the directory that contains your `.mod` file:
+
+   ```bash
+   cd /path/to/your/model_directory
+   /path/to/nonmem/nm760/execute mymodel.mod
+   ```
+
+Host scripts (`execute`, `nmfeXX`, …) call `docker run` with the matching `kinginsun/nonmem:<version>` image. You only need Docker, this repo, and your ICON license file.
 
 ---
 
@@ -120,8 +135,13 @@ git clone https://github.com/kinginsun/nonmem.git
 cd nonmem
 ```
 
-1. Build the Docker image (see [Building images](#building-images)) — run from **PowerShell** or **cmd** in the repo root.
-2. Install host wrappers for your version:
+1. **Pull** the Docker image (PowerShell or cmd in repo root):
+
+   ```powershell
+   docker pull kinginsun/nonmem:7.6.0   # or kinginsun/nonmem:7.5.0 / kinginsun/nonmem:7.4.3
+   ```
+
+2. **Install host wrappers** for your version:
 
    ```powershell
    cd nm760
@@ -156,7 +176,9 @@ Add the version directory (e.g. `C:\nonmem\nm760`) to your user **Path** environ
 
 ---
 
-## Building images
+## Building images (developers)
+
+> **For maintainers only.** End users should `docker pull kinginsun/nonmem:<version>` (see [Quick start](#quick-start)). Building requires ICON NONMEM installation media under `install/` (not in git).
 
 Run all `docker build` commands from the **repository root**.
 
@@ -166,7 +188,7 @@ The `install/` folder is not committed. Obtain NONMEM from [ICON](https://nonmem
 
 | Version | Required under `install/` |
 |---------|---------------------------|
-| 7.4.3 (MPI + PsN) | `nm743CD/`, `PsN-Source01/` |
+| 7.4.3 (MPI + PsN) | `nm743CD/`, `PsN-Source/` |
 | 7.4.3 (plain) | `nm743CD/`, `PsN-Source/` |
 | 7.5.0 | `nm750CD/`, `PsN-Source/` |
 | 7.6.0 | `nm760CD/` (must contain `SETUP76`), `PsN-Source/` — details in [`install/README.7.6.0.md`](install/README.7.6.0.md) |
@@ -176,24 +198,68 @@ The `install/` folder is not committed. Obtain NONMEM from [ICON](https://nonmem
 **NONMEM 7.6.0** (recommended layout; smallest image):
 
 ```bash
-docker build -f Dockerfile.7.6.0 -t kinginsun/nonmemmpi2:7.6.0 .
+docker build -f Dockerfile.7.6.0 -t kinginsun/nonmem:7.6.0 .
 ```
 
 **NONMEM 7.5.0:**
 
 ```bash
-docker build -f Dockerfile.7.5.0 -t kinginsun/nonmemmpi2:7.5.0 .
+docker build -f Dockerfile.7.5.0 -t kinginsun/nonmem:7.5.0 .
 ```
 
 **NONMEM 7.4.3:**
 
 ```bash
 # MPI + PsN (matches nm743/install.sh)
-docker build -f Dockerfile.7.4.3 -t kinginsun/nonmemmpi2:7.4.3 .
+docker build -f Dockerfile.7.4.3 -t kinginsun/nonmem:7.4.3 .
 
-# NONMEM only (no MPI / PsN)
-docker build -f Dockerfile -t kinginsun/nonmem:7.4.3 .
+# NONMEM only (no MPI / PsN; not used by host wrappers)
+docker build -f Dockerfile -t nonmem:7.4.3-plain .
 ```
+
+---
+
+## Publishing to Docker Hub
+
+Images are published as **`kinginsun/nonmem:<version>`** on [Docker Hub](https://hub.docker.com/r/kinginsun/nonmem).
+
+### Publish (maintainers)
+
+1. Log in:
+
+   ```bash
+   docker login
+   ```
+
+2. Build and push one version or all:
+
+   ```bash
+   # macOS / Linux
+   ./scripts/publish-docker.sh 7.6.0
+   ./scripts/publish-docker.sh all
+
+   # Windows (PowerShell)
+   .\scripts\publish-docker.ps1 -Version 7.6.0
+   .\scripts\publish-docker.ps1 -Version all
+   ```
+
+   Push an existing local image without rebuilding:
+
+   ```bash
+   ./scripts/publish-docker.sh 7.6.0 --push-only
+   ```
+
+3. Confirm tags on Docker Hub: https://hub.docker.com/r/kinginsun/nonmem/tags
+
+| Tag | Dockerfile | Notes |
+|-----|------------|--------|
+| `7.6.0` | `Dockerfile.7.6.0` | Multi-stage, ~1.1 GB |
+| `7.5.0` | `Dockerfile.7.5.0` | Multi-stage; requires `install/nm750CD` + `PsN-Source` |
+| `7.4.3` | `Dockerfile.7.4.3` | Multi-stage; requires `install/nm743CD` + `PsN-Source` |
+
+Override the registry name: `DOCKER_REGISTRY=myuser/nonmem ./scripts/publish-docker.sh 7.6.0` (default: `kinginsun/nonmem`)
+
+**License note:** Images contain NONMEM binaries compiled from ICON installation media. Publishing is for licensed users; end users still mount their own `nonmem.lic` at run time.
 
 ---
 
@@ -246,7 +312,7 @@ Adjust `NM_ROOT`, image tag, and in-container paths for your version (`nm750` / 
 
 ```bash
 NM_ROOT=/path/to/nonmem/nm750
-TAG=kinginsun/nonmemmpi2:7.5.0
+TAG=kinginsun/nonmem:7.5.0
 MODEL_DIR=$(pwd)
 
 docker run --rm \
@@ -346,7 +412,7 @@ Enable **Copy back results to main folder** when using `nmfe74`, `nmfe75`, or `n
 
 ### Docker build fails on PsN / `psn.conf` (7.6.0)
 
-Use the current `Dockerfile.7.6.0`. PsN installs under `/usr/local/share/perl/<version>/PsN_5_2_6/`, not Debian’s `archlib` path.
+Use the current `Dockerfile.7.6.0`. PsN installs under `/usr/local/share/perl/<version>/PsN_5_7_1/`, not Debian’s `archlib` path.
 
 ### Image still large (7.6.0)
 

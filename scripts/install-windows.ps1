@@ -37,7 +37,8 @@ function Write-DockerWrapper {
         [string]$ContainerPath,
         [string]$WorkDir,
         [string]$Entry,
-        [string[]]$EntryArgs = @()
+        [string[]]$EntryArgs = @(),
+        [string]$Platform = ''
     )
 
     $entryArgsLine = if ($EntryArgs.Count -gt 0) {
@@ -45,13 +46,14 @@ function Write-DockerWrapper {
     } else {
         ''
     }
+    $platformLine = if ($Platform) { " --platform $Platform" } else { '' }
 
     @"
 param([Parameter(ValueFromRemainingArguments=`$true)][string[]]`$Args)
 `$NMRoot = '$NmRoot'
 `$modelFolder = (Get-Location).Path -replace '\\','/'
 `$d = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
-docker run --rm --name "nonmem`$d" --workdir $WorkDir `
+docker run$platformLine --rm --name "nonmem`$d" --workdir $WorkDir `
   -v "`${NMRoot}/license:/nonmem/$ContainerPath/license" `
   -v "`${modelFolder}:/nonmem/models" `
   $Image $Entry @Args$entryArgsLine
@@ -64,8 +66,10 @@ function Write-NmshellWrapper {
         [string]$OutPs1,
         [string]$NmRoot,
         [string]$Image,
-        [string]$ContainerPath
+        [string]$ContainerPath,
+        [string]$Platform = ''
     )
+    $platformLine = if ($Platform) { " --platform $Platform" } else { '' }
 
     @"
 `$NMRoot = '$NmRoot'
@@ -75,7 +79,7 @@ if (`$existing -contains 'nonmemshell') {
   docker stop nonmemshell | Out-Null
   docker rm nonmemshell | Out-Null
 }
-docker run -it --name nonmemshell --workdir /nonmem/models `
+docker run$platformLine -it --name nonmemshell --workdir /nonmem/models `
   -v "`${NMRoot}/license:/nonmem/$ContainerPath/license" `
   -v "`${modelFolder}:/nonmem/models" `
   $Image bash
@@ -100,10 +104,10 @@ function Install-VersionWrappers {
         }
 
         if ($item.Type -eq 'nmshell') {
-            Write-NmshellWrapper -OutPs1 $ps1Path -NmRoot $nmRoot -Image $Cfg.Image -ContainerPath $Cfg.ContainerPath
+            Write-NmshellWrapper -OutPs1 $ps1Path -NmRoot $nmRoot -Image $Cfg.Image -ContainerPath $Cfg.ContainerPath -Platform $Cfg.Platform
         } else {
             Write-DockerWrapper -OutPs1 $ps1Path -NmRoot $nmRoot -Image $Cfg.Image `
-                -ContainerPath $Cfg.ContainerPath -WorkDir $item.WorkDir -Entry $item.Entry -EntryArgs $item.EntryArgs
+                -ContainerPath $Cfg.ContainerPath -WorkDir $item.WorkDir -Entry $item.Entry -EntryArgs $item.EntryArgs -Platform $Cfg.Platform
         }
 
         $cmdPath = [System.IO.Path]::ChangeExtension($ps1Path, '.cmd')
@@ -114,7 +118,8 @@ function Install-VersionWrappers {
 
 $VersionConfigs = @{
     '743' = @{
-        Image          = 'kinginsun/nonmemmpi2:7.4.3'
+        Image          = 'kinginsun/nonmem:7.4.3'
+        Platform       = 'linux/amd64'
         ContainerPath  = 'nm743'
         CheckImage     = $true
         Wrappers       = @(
@@ -126,7 +131,8 @@ $VersionConfigs = @{
         )
     }
     '750' = @{
-        Image          = 'kinginsun/nonmemmpi2:7.5.0'
+        Image          = 'kinginsun/nonmem:7.5.0'
+        Platform       = 'linux/amd64'
         ContainerPath  = 'nm750'
         CheckImage     = $true
         Wrappers       = @(
@@ -140,7 +146,7 @@ $VersionConfigs = @{
         )
     }
     '760' = @{
-        Image          = 'kinginsun/nonmemmpi2:7.6.0'
+        Image          = 'kinginsun/nonmem:7.6.0'
         ContainerPath  = 'nm760'
         CheckImage     = $true
         Wrappers       = @(
@@ -187,13 +193,8 @@ if ($cfg.CheckImage) {
     docker image inspect $cfg.Image 2>$null | Out-Null
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Docker image $($cfg.Image) not found."
-        Write-Host "Build from the repository root:"
-        $dockerfile = switch ($versionKey) {
-            '743' { 'Dockerfile.7.4.3' }
-            '750' { 'Dockerfile.7.5.0' }
-            '760' { 'Dockerfile.7.6.0' }
-        }
-        Write-Host "  docker build -f $dockerfile -t $($cfg.Image) ."
+        Write-Host "Pull the pre-built image:"
+        Write-Host "  docker pull $($cfg.Image)"
         exit 12
     }
 }
